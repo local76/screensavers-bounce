@@ -1,0 +1,50 @@
+[package]
+name = "bounce"
+version = "2026.7.0"
+edition = "2021"
+description = "bounce - retro terminal screensaver effect"
+autobins = false
+
+[[bin]]
+name = "bounce"
+path = "src/main.rs"
+
+[dependencies]
+library = { git = "https://github.com/local76/library.git", branch = "main", default-features = false, features = ["scenes", "screensaver-runtime", "role-application", "lifecycle-foreground", "platform-native"] }
+
+[build-dependencies]
+winres = "0.1"
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"
+
+[package.metadata.deb]
+name = "scene-bounce"
+maintainer = "Screensavers Developer <dev@local76.org>"
+extended-description = "Screensaver effect (bounce) part of the screensavers collection."
+depends = "libc6, xterm"
+section = "utils"
+priority = "optional"
+assets = [
+    ["target/release/bounce", "usr/libexec/screensaver-shims/bounce", "755"],
+    ["assets/scene-bounce.desktop", "usr/share/applications/scene-bounce.desktop", "644"],
+    ["assets/scene-bounce.xml", "usr/share/xscreensaver/config/scene-bounce.xml", "644"]
+]
+
+[package.metadata.generate-rpm]
+name = "scene-bounce"
+version = "2026.7.0"
+release = "1"
+arch = "x86_64"
+summary = "bounce - retro terminal screensaver effect"
+description = "Screensaver effect (bounce) part of the screensavers collection."
+license = "MIT"
+assets = [
+    { source = "target/release/bounce", dest = "/usr/libexec/screensaver-shims/bounce", mode = "755" },
+    { source = "assets/scene-bounce.desktop", dest = "/usr/share/applications/scene-bounce.desktop", mode = "644" },
+    { source = "assets/scene-bounce.xml", dest = "/usr/share/xscreensaver/config/scene-bounce.xml", mode = "644" }
+]
