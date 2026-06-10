@@ -13,9 +13,7 @@ use library::platform::native::sys_info::get_system_info;
 use library::apps::identity;
 use library::toolkit::sys_info::query_current_palette;
 
-use library::toolkit::rgb_controller::{RgbController, is_openrgb_enabled};
 
-use library::toolkit::rgb_protocol::RgbColor;
 
 pub mod types;
 pub mod physics;
@@ -71,8 +69,6 @@ pub struct Bounce {
 
     pub elapsed: f32,
     pub(crate) rng: LcgRng,
-    pub rgb: Option<RgbController>,
-    pub last_rgb_color: Option<RgbColor>,
 }
 
 impl Default for Bounce {
@@ -165,8 +161,6 @@ impl Bounce {
 
             elapsed: 0.0,
             rng: LcgRng::new(9876),
-            rgb: if is_openrgb_enabled() { Some(RgbController::new()) } else { None },
-            last_rgb_color: None,
         }
     }
 
@@ -307,10 +301,7 @@ impl Screensaver for Bounce {
                     if self.rng.next_bool(jump_prob) {
                         self.player_vy = 12.0 + self.auto_skill * 2.0;
                         self.auto_skill = (self.auto_skill + 0.003).min(0.98);
-                        if let Some(ref r) = self.rgb {
-                            r.flash(RgbColor::new(0, 255, 100), Duration::from_millis(150));
-                        }
-                    }
+}
                 }
 
                 // Pre-4.1 Windows GetAsyncKeyState(VK_SPACE) keyboard jump
@@ -333,9 +324,7 @@ impl Screensaver for Bounce {
                     self.bhop_timer = 0.0;
                     self.bhop_speed = 0.0;
                     self.auto_skill = (self.auto_skill * 0.92).max(0.65);
-                    if let Some(ref r) = self.rgb {
-                        r.flash(RgbColor::new(255, 0, 0), Duration::from_millis(500));
-                    }
+
                 }
             }
             BhopState::Dead => {
@@ -389,19 +378,8 @@ impl Screensaver for Bounce {
             }
         }
 
-        let speed_ratio = (self.bhop_speed / 450.0).clamp(0.1, 1.0);
-        let new_color = RgbColor::new(
-            (10.0 * speed_ratio) as u8,
-            (150.0 * speed_ratio) as u8,
-            (255.0 * speed_ratio) as u8,
-        );
-        if self.last_rgb_color != Some(new_color) {
-            self.last_rgb_color = Some(new_color);
-            if let Some(ref r) = self.rgb {
-                r.set_color(new_color);
-            }
-        }
-    }
+
+}
 
     fn draw(&self, grid: &mut [TerminalCell], cols: usize, rows: usize) {
         draw_dashboard(self, grid, cols, rows);
