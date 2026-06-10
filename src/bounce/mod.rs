@@ -1,4 +1,4 @@
-//! Consolidated bounce screensaver effect module.
+﻿//! Consolidated bounce screensaver effect module.
 //!
 //! **Taxonomy Classification**: System Role (Purpose - Application Software).
 
@@ -7,7 +7,7 @@ use std::time::Duration;
 use library::core::screensaver::Screensaver;
 use library::core::logo_block::render_logo_block;
 
-use library::platform::native::sys_info::get_system_info;
+use library::toolkit::sys_info::get_system_info;
 use library::apps::identity;
 use library::toolkit::sys_info::query_current_palette;
 

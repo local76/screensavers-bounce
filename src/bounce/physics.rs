@@ -1,9 +1,9 @@
-use library::core::TerminalCell;
+﻿use library::core::TerminalCell;
 use super::Bounce;
 use super::types::{BhopState, CommandState, COMMANDS};
 
 pub fn get_system_info_theme_is_dark() -> bool {
-    library::platform::native::sys_info::query_system_theme().is_dark_mode
+    library::toolkit::sys_info::query_system_theme().is_dark_mode
 }
 
 #[allow(clippy::too_many_arguments)]
